@@ -14,7 +14,7 @@ const authentication = async function (req, res, next) {
                 return res.status(400).send({ status: false, message: err.message })
             }
             else {
-                req.loginId = decodedtoken.userId
+                idFromToken = decodedtoken.userId
                 next()
 
             }

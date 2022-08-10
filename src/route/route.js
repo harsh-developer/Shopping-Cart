@@ -28,8 +28,8 @@ router.delete("/products/:productId", deleteProductById);
 
 router.post("/users/:userId/cart", authentication, createCart)
 router.put("/users/:userId/cart", authentication, updateCart)
-router.delete("/users/:userId/cart", authentication, deleteCart)
 router.get("/users/:userId/cart", authentication, getCart);
+router.delete("/users/:userId/cart", authentication, deleteCart)
 
 //=================================Order Apis====================================
 router.post("/users/:userId/orders", authentication, createOrder)

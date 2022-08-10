@@ -16,10 +16,11 @@ const createProduct = async function (req, res) {
         const files = req.files
 
         let productDetails = req.body
+        
         if (!isValidRequest(req.body)) {
             return res.status(400).send({ status: false, message: "Please enter details for product listing." })
         }
-        // const data = JSON.parse(req.body.data)
+
         //extracting params form request body
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = productDetails
 
@@ -32,6 +33,7 @@ const createProduct = async function (req, res) {
             return res.status(400).send({ status: false, message: "Title can't be a numeric value." })
         }
         title = removeExtraSpace(title)
+
         let isTitleAlreadyExist = await productModel.findOne({ title: title, isDeleted: false })
         if (isTitleAlreadyExist) {
             return res.status(409).send({ status: false, message: "Product with this title already exists, try new." })
@@ -246,16 +248,20 @@ const updateProductDetails = async function (req, res) {
     try {
 
         let productId = req.params.productId
+
         if (!isValidObjectId(productId)) return res.status(400).send({ status: false, msg: "Please provide a valid productId" });
 
         const productData = await productModel.findOne({ _id: productId, isDeleted: false });
+
         if (!productData) return res.status(404).send({ status: false, msg: "Product not found" });
+
         let data = req.body
         let files = req.files
 
         if ((Object.keys(data).length == 0) && (req.files == undefined)) {
             return res.status(400).send({ status: false, msg: "Please enter product details for updation." });
         }
+
         let { title, description, price, currencyId, currencyFormat, isFreeShipping, style, availableSizes, installments } = data;
         let obj = {}
 
@@ -273,10 +279,12 @@ const updateProductDetails = async function (req, res) {
             if (!isNaN(description)) return res.status(400).send({ status: false, msg: "Description can't be numbers only, add some word as well." });
             obj.description = description
         };
+
         if (price) {
             if (!(isValid(price) && isValidNumber(price)&&price>0)) return res.status(400).send({ status: false, msg: "Enter valid no in price" });
             obj.price = price
         };
+
         if (currencyId) {
             if (!isValid(currencyId)) return res.status(400).send({ status: false, msg: "Enter currencyId" });
 
@@ -310,6 +318,7 @@ const updateProductDetails = async function (req, res) {
             if (!isValid(style)) return res.status(400).send({ status: false, msg: "Enter style" });
             obj.style = style
         };
+
         if (availableSizes) {
             if (!isValid(availableSizes))
                 return res.status(400).send({ status: false, msg: "Enter availableSizes" });
@@ -323,6 +332,7 @@ const updateProductDetails = async function (req, res) {
             }
             obj.availableSizes = availableSizes
         };
+        
         if (installments) {
             if (!(isValid(installments) && isValidNumberInt(installments)&&installments>0))
                 return res.status(400).send({ status: false, msg: "Enter valid number in installments" });

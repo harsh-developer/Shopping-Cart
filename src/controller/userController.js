@@ -6,7 +6,7 @@ const { isValid, isValidObjectId,
     validName, isValidMail,
     isValidMobile, isValidRequest,
     isValidPassword, isValidStreet,
-    isValidCity, isValidPin } = require("../validator/validation")
+    isValidCity, isValidPin, isValidImage } = require("../validator/validation")
 
 
 
@@ -83,7 +83,7 @@ const registerUser = async function (req, res) {
                 return res.status(400).send({ status: false, msg: "Please enter address for shipping and billing purpose." })
             }
         if (!shipping) {
-            return res.status(400).send({ status: false, msg: "please enter shipping." });
+            return res.status(400).send({ status: false, msg: "please enter shipping address." });
         }
         if (!isValid(shipping.street)) {
             return res.status(400).send({ status: false, msg: "please enter street for shipping." });
@@ -203,7 +203,7 @@ const getUser = async function (req, res) {
             return res.status(404).send({ status: false, message: "user not found" })
         }
         //-------------------------------------checking Authorizaton------------------------->>
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to view the profile details" })
         }
        
@@ -228,13 +228,12 @@ const updateUserDetails = async (req, res) => {
             return res.status(400).send({ status: false, msg: "Please provide a valid userId" });
         }
 
-        
         const findUserData = await userModel.findById(userId)
         if (!findUserData) {
             return res.status(404).send({ status: false, message: "user not found" })
         }
         //==============================checking Authorization===================
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to update the profile details" })
         }
 
@@ -342,7 +341,6 @@ const updateUserDetails = async (req, res) => {
 
             if (address.billing) {
 
-
                 if (address.billing.street) {
                     if (!isValidStreet(address.billing.street)) {
                         return res.status(400).send({
@@ -386,25 +384,7 @@ const updateUserDetails = async (req, res) => {
             obj.profileImage = userImage
 
         }
-
-
-
-
-
-
-        // if (req.files.length > 0) {
-        //     console.log(file)
-        //     const userImage = await uploadFile(file[0])
-        //     if(!(userImage))
-        //     return res.status(400).send({ status: false, Message: "No data in profile image" })
-        //     else
-        //     obj.profileImage = userImage
-
-        // }
-
-
-
-
+        
         let updateProfileDetails = await userModel.findOneAndUpdate({ _id: userId }, { $set: obj }, { new: true })
 
         return res.status(200).send({ status: true, message: "Update user profile is successful", data: updateProfileDetails })

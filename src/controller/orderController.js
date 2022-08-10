@@ -16,7 +16,7 @@ const createOrder = async function (req, res) {
             return res.status(404).send({ status: false, message: "user not found" })
         }
         //-------------------------------------Checking Authorizaton------------------------->>
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to place the order" })
         }
 
@@ -28,12 +28,14 @@ const createOrder = async function (req, res) {
       
         let { cartId, status, cancellable } = req.body
         //validating cartId
+
         if (!isValid(cartId)) {
             return res.status(400).send({ status: false, message: "CartId is required to place order" })
         }
         if (!isValidObjectId(cartId)) {
             return res.status(400).send({ status: false, message: "Invalid cartid" })
         }
+
         let isCartExist = await cartModel.findOne({ _id: cartId })
 
         if (isCartExist==null) {
@@ -43,7 +45,7 @@ const createOrder = async function (req, res) {
         //Checking Authorizaton
 
         if(userId!=isCartExist.userId){
-            return res.status(403).send({ status: false, message: "This cart does'nt belong to user logged In" }) 
+            return res.status(403).send({ status: false, message: "This cart doesn't belong to user logged In" }) 
         }
 
         if(isCartExist.items.length==0){
@@ -118,7 +120,7 @@ const updateOrder = async function (req, res) {
 
         //================================================Checking Authorizaton================================================//
 
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to update this order." })
         }
 

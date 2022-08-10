@@ -57,7 +57,6 @@ const isValidObjectId = function (objectId) {
 
 
 const isValidSize = function (size) {
-
   let flag = 0
   for (x in size) {
     let ret = ["S", "XS","M","X", "L","XXL", "XL"].indexOf(size[x]) != -1

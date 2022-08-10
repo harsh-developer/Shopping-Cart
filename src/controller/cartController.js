@@ -41,7 +41,7 @@ const createCart = async function (req, res) {
 
         // Authorization
 
-        if (req.loginId != userIdbyParams) {
+        if (idFromToken != userIdbyParams) {
             return res.status(403).send({ status: false, message: "Unauthorize user" })
         }
 
@@ -146,7 +146,7 @@ const updateCart = async function (req, res) {
             return res.status(404).send({ status: false, message: "user not found" })
         }
         //-------------------------------------checking Authorizaton------------------------->>
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to update the cart details" })
         }
 
@@ -257,7 +257,7 @@ const getCart = async (req, res) => {
         if (!checkUserId) return res.status(404).send({ status: false, msg: "userId doesn't exits" });
 
         //======================checking Authorization============================
-        if (userId != req.loginId) return res.status(403).send({ status: false, msg: "unauthorized user" });
+        if (userId != idFromToken) return res.status(403).send({ status: false, msg: "unauthorized user" });
 
         let cart = await cartModel.findOne({ userId: userId });
         if (cart == null) return res.status(404).send({ status: false, msg: "cart not available" });
@@ -287,7 +287,7 @@ const deleteCart = async function (req, res) {
             return res.status(404).send({ status: false, message: "user not found" })
         }
         //-------------------------------------checking Authorizaton------------------------->>
-        if (req.loginId != userId) {
+        if (idFromToken != userId) {
             return res.status(403).send({ status: false, message: "User logged is not allowed to delete the cart details" })
         }
         

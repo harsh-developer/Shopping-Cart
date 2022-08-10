@@ -7,7 +7,7 @@ const app = express()
 app.use(express.json())
 app.use(multer().any())
 
-mongoose.connect('mongodb+srv://harsh-developer:aA12345678@cluster0.lxbes.mongodb.net/group72Database?retryWrites=true&w=majority',
+mongoose.connect('mongodb+srv://harsh-developer:aA12345678@cluster0.lxbes.mongodb.net/shoppingCartProject?retryWrites=true&w=majority',
     { useNewUrlParser: true })
 
     .then(() => console.log("MongoDb is connected..."))
@@ -20,4 +20,3 @@ app.use("/", route);
 app.listen(process.env.PORT || 3000, function () {
     console.log('Express app running on port ' + (process.env.PORT || 3000))
 });
-
